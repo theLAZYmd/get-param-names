@@ -17,9 +17,32 @@ Advantages of this library over others:
 
 Maintained by [theLAZYmd](https://github.com/theLAZYmd/), please report any issues found.
 
+## Applications
+
+### Parameter grabbing:
+Let's say all your data is stored in a big data object (let's call that data `message`). Let's say you have an event listener that routes you to a particular function depending on what the event is. That function now takes specific pieces of information in order to work, let's say:
+```js
+function onNewMessage(content, member) {}
+```
+where the `content` and `member` properties you need to grab are properties of `message`.
+
+Now what you could do is write a deconstructor into each of your functions, like:
+```js
+function onNewMessage({content, member}) {}
+```
+but that might get annoying if you're not used to it and you might have to change all your previous work and so on. Plus, some people are stylistically opposed to such things
+
+So what you can do instead, is tell node to find the parameters you need from the function, grab those, and send them in the function call, without ever specifically hard-coding them. For instance:
+```js
+let params = getParamNames(onToxicUsers);
+let args = params.map(p => data[p]);
+onNewMessage(...args);
+```
+and voilà! You've parsed the arguments to the function without ever knowing what they were. This allows you to create a universal system for all your function calls.
+
 ## Example Usages
 
-### Installation:
+#### Installation:
 Use `npm install get-param-names` to download the package to your workspace.
 Then write the following at the top of any file that you wish to use the module:
 ```js
@@ -28,7 +51,7 @@ const getParamNames = require('get-param-names');
 and simply use the constant as a function wherever needed.
 Returns an array of parameter names, as specified in the function definition.
 
-### Example 1
+#### Example 1
 ##### Simple named function
 ```js
 function f0(self, meme, init) {
@@ -37,7 +60,7 @@ function f0(self, meme, init) {
 console.log(getParamNames(f0)); // ["self", "meme", "init"]
 ```
 
-### Example 2
+#### Example 2
 ##### Simple named function with default parameters
 ```js
 function f1(str = 'hello', arr = ['what\'s up']) {
@@ -46,14 +69,14 @@ function f1(str = 'hello', arr = ['what\'s up']) {
 console.log(getParamNames(f1)); // ["str", "arr"]
 ```
 
-### Example 3
+#### Example 3
 ##### Simple arrow function with string parameters
 ```js
 let f2 = (meme, param) => [meme, param];
 console.log(getParamNames(f2)); // ["meme", "param"]
 ```
 
-### Example 4
+#### Example 4
 ##### Function with deconstructed Object parameter
 ```js
 async function f3(ids, {
@@ -66,7 +89,7 @@ async function f3(ids, {
 console.log(getParamNames(f3)); // [ 'ids', { fetch: false, filter: 'user => user', arr: [] } ]
 ```
 
-### Example 5
+#### Example 5
 ##### Complex function with deconstructed Object parameter, deconstructed Array parameter, and default Object and Array values
 ```js
 async function f4({
