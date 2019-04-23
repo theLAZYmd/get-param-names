@@ -1,7 +1,7 @@
 {
     "name": "get-param-names",
     "description": "The best library to parse a function into its parameter names.",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "main": "main.js",
     "keywords": [
 		"functions",
